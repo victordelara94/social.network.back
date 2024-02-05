@@ -5,7 +5,7 @@ import { Repository } from '../repository.interface.js';
 import { UserModel } from './user.mongo.model.js';
 const debug = createDebug('SN:Repo:UserMongoRepo');
 
-export class UserMongoRepository implements Repository<User> {
+export class UserRepository implements Repository<User> {
   constructor() {
     debug('intantiate');
   }
