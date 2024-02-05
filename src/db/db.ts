@@ -1,13 +1,13 @@
 import createDebug from 'debug';
-import 'dotenv/config';
 import mongoose from 'mongoose';
 
+import { password, user } from '../config.js';
 const debug = createDebug('GL:db');
-export const dbConnect = async () => {
-  const user = process.env.DB_USER;
-  const password = process.env.DB_PASSWORD;
-  const dbName = 'socialnetwork';
-  const uri = `mongodb+srv://${user}:${password}@cluster0.wyzrngt.mongodb.net/${dbName}?retryWrites=true&w=majority`;
-  debug('SN:db');
+export const dbConnect = () => {
+  const db = 'socialnetwork';
+  const uri = `mongodb+srv://${user}:${password}@cluster0.wyzrngt.mongodb.net/${db}?retryWrites=true&w=majority`;
+  debug('db');
   return mongoose.connect(uri);
 };
+
+dbConnect();

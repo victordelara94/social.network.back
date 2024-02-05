@@ -9,8 +9,9 @@ const PORT = process.env.PORT ?? 3000;
 const server = createServer(app);
 dbConnect()
   .then((mongoose) => {
+    console.log('mongoose');
     server.listen(PORT);
-    debug('Connected to DB:', mongoose.connection.db.databaseName);
+    console.log('Connected to DB:', mongoose.connection.db.databaseName);
   })
   .catch((error) => {
     server.emit('error', error);
