@@ -3,7 +3,7 @@ import bcrypt from 'bcrypt';
 import createDebug from 'debug';
 import { NextFunction, Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
-import { AuthInterceptor } from '../middlewares/auth.verificator';
+import { AuthVerificator } from '../middlewares/auth.verificator';
 import { UserRepository } from '../repository/user/user.repository';
 const debug = createDebug('GL:Controller:UserController');
 export class UserController {
@@ -37,7 +37,7 @@ export class UserController {
         id: data[0].id,
       };
 
-      const token = jwt.sign(payload, AuthInterceptor.secret);
+      const token = jwt.sign(payload, AuthVerificator.secret);
       res.json({ user: data[0], token });
     } catch (error) {
       next(error);
