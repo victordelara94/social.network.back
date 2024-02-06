@@ -3,9 +3,9 @@ import bcrypt from 'bcrypt';
 import createDebug from 'debug';
 import { NextFunction, Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
-import { AuthVerificator } from '../middlewares/auth.verificator';
-import { UserRepository } from '../repository/user/user.repository';
-const debug = createDebug('GL:Controller:UserController');
+import { AuthVerificator } from '../middlewares/auth.verificator.js';
+import { UserRepository } from '../repository/user/user.repository.js';
+const debug = createDebug('SN:Controller:UserController');
 export class UserController {
   constructor(private repo: UserRepository) {
     debug('instantiate');
@@ -13,6 +13,8 @@ export class UserController {
 
   async register(req: Request, res: Response, next: NextFunction) {
     try {
+      const saltRounds = 10;
+      req.body.password = await bcrypt.hash(req.body.password, saltRounds);
       const data = await this.repo.create(req.body);
       res.status(201);
       res.json(data);

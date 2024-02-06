@@ -1,6 +1,6 @@
 import createDebug from 'debug';
 import { NextFunction, Request, Response } from 'express';
-// Import { Auth } from '../services/auth.js';
+
 import jwt from 'jsonwebtoken';
 
 const debug = createDebug('SN:Middleware:auth');

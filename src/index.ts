@@ -1,5 +1,6 @@
 import createDebug from 'debug';
 import { createServer } from 'http';
+import mongoose from 'mongoose';
 import { app } from './app.js';
 import { dbConnect } from './db/db.js';
 
@@ -8,10 +9,11 @@ const PORT = process.env.PORT ?? 3000;
 
 const server = createServer(app);
 dbConnect()
-  .then((mongoose) => {
-    console.log('mongoose');
+  .then(() => {
     server.listen(PORT);
-    console.log('Connected to DB:', mongoose.connection.db.databaseName);
+    mongoose.connection.on('connected', () => {
+      console.log('Connected to DB:', mongoose.connection.db.databaseName);
+    });
   })
   .catch((error) => {
     server.emit('error', error);
