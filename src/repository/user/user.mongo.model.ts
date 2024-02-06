@@ -5,7 +5,15 @@ const userSchema = new Schema<User>({
   userName: { type: String, required: true, unique: true },
   password: { type: String, required: true },
   email: { type: String, required: true, unique: true },
-  avatar: { type: String }, // Optional: URL to the profile image
+  avatar: {
+    type: {
+      publicId: { type: String },
+      width: { type: Number },
+      height: { type: Number },
+      format: { type: String },
+      url: { type: String },
+    },
+  }, // Optional: URL to the profile image
   followers: [{ type: Schema.Types.ObjectId, ref: 'User' }],
   following: [{ type: Schema.Types.ObjectId, ref: 'User' }],
   isPrivate: { type: Boolean, default: false },

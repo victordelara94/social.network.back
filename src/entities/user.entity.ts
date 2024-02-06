@@ -1,3 +1,5 @@
+import { ImgData } from '../types/types';
+
 export type Login = {
   userName: string;
   password: string;
@@ -9,6 +11,6 @@ export type User = Login & {
   age: number;
   following: User[];
   followers: User[];
-  avatar: String;
+  avatar: ImgData;
   isPrivate: boolean;
 };
