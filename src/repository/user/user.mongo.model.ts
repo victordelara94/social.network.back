@@ -2,45 +2,21 @@ import { Schema, model } from 'mongoose';
 import { User } from '../../entities/user.entity.js';
 
 const userSchema = new Schema<User>({
-  userName: {
-    type: String,
-    unique: true,
-    require: true,
-  },
-  password: {
-    type: String,
-    require: String,
-  },
-  email: {
-    type: String,
-    unique: true,
-    require: true,
-  },
-  firstName: {
-    type: String,
-    require: true,
-  },
-  surname: {
-    type: String,
-    require: true,
-  },
-  age: { type: Number },
-
-  following: [
-    {
-      type: Schema.Types.ObjectId,
-      ref: 'User',
-    },
-  ],
-  followers: [
-    {
-      type: Schema.Types.ObjectId,
-      ref: 'User',
-    },
-  ],
+  userName: { type: String, required: true, unique: true },
+  password: { type: String, required: true },
+  email: { type: String, required: true, unique: true },
   avatar: {
-    type: {},
-  },
+    type: {
+      publicId: { type: String },
+      width: { type: Number },
+      height: { type: Number },
+      format: { type: String },
+      url: { type: String },
+    },
+  }, // Optional: URL to the profile image
+  followers: [{ type: Schema.Types.ObjectId, ref: 'User' }],
+  following: [{ type: Schema.Types.ObjectId, ref: 'User' }],
+  isPrivate: { type: Boolean, default: false },
 });
 
 userSchema.set('toJSON', {

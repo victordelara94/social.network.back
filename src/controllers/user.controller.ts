@@ -1,18 +1,27 @@
 /* eslint-disable no-unused-vars */
 import bcrypt from 'bcrypt';
-import createDebug from 'debug';
 import { NextFunction, Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
-import { AuthVerificator } from '../middlewares/auth.verificator';
-import { UserRepository } from '../repository/user/user.repository';
-const debug = createDebug('GL:Controller:UserController');
+import { AuthVerificator } from '../middlewares/auth.verificator.js';
+import { UserRepository } from '../repository/user/user.repository.js';
+import { CloudinaryService } from '../services/cloudinary.service.js';
+
 export class UserController {
+  cloudinary: CloudinaryService;
   constructor(private repo: UserRepository) {
-    debug('instantiate');
+    this.cloudinary = new CloudinaryService();
   }
 
   async register(req: Request, res: Response, next: NextFunction) {
     try {
+      if (!req.file) throw new Error('Not received a photo');
+      const path = req.file.destination + '/' + req.file.filename;
+      const image = await this.cloudinary.uploadImage(path);
+      req.body.avatar = image;
+
+      const saltRounds = 10;
+      req.body.password = await bcrypt.hash(req.body.password, saltRounds);
+
       const data = await this.repo.create(req.body);
       res.status(201);
       res.json(data);
@@ -64,9 +73,7 @@ export class UserController {
 
   async update(req: Request, res: Response, next: NextFunction) {
     try {
-      debug(req.body);
       const data = await this.repo.update(req.body.validatedId, req.body);
-      debug(data);
       res.json(data);
     } catch (error) {
       next(error);
