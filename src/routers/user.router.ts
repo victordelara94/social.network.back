@@ -5,7 +5,7 @@ import { UserController } from '../controllers/user.controller.js';
 import { AuthVerificator } from '../middlewares/auth.verificator.js';
 import { MulterMiddleware } from '../middlewares/multer.middleware.js';
 
-const debug = createDebug('GLRouter:UserRouter');
+const debug = createDebug('UserRouter');
 
 export class UserRouter {
   router: express.Router;
@@ -23,13 +23,16 @@ export class UserRouter {
     this.router.get(
       '/',
       this.authInterceptor.authorizate.bind(this.authInterceptor),
-
       this.controller.getAll.bind(this.controller)
+    );
+    this.router.get(
+      '/search?',
+      this.authInterceptor.authorizate.bind(this.authInterceptor),
+      this.controller.search.bind(this.controller)
     );
     this.router.get(
       '/:id',
       this.authInterceptor.authorizate.bind(this.authInterceptor),
-
       this.controller.getById.bind(this.controller)
     );
     this.router.post(

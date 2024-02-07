@@ -8,7 +8,6 @@ export type Login = {
 export type User = Login & {
   id: string;
   email: string;
-  age: number;
   following: User[];
   followers: User[];
   avatar: ImgData;

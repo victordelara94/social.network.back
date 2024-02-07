@@ -3,7 +3,7 @@ import createDebug from 'debug';
 import { User } from '../../entities/user.entity.js';
 import { Repository } from '../repository.interface.js';
 import { UserModel } from './user.mongo.model.js';
-const debug = createDebug('SN:Repo:UserMongoRepo');
+const debug = createDebug('SN:Repo:UserRepo');
 
 export class UserRepository implements Repository<User> {
   constructor() {
@@ -24,6 +24,7 @@ export class UserRepository implements Repository<User> {
   }
 
   async create(newData: Omit<User, 'id'>): Promise<User> {
+    debug(newData, 'REPO CREATE');
     const data = await UserModel.create(newData);
     return data;
   }
@@ -36,6 +37,7 @@ export class UserRepository implements Repository<User> {
     value: unknown;
   }): Promise<User[]> {
     const data = await UserModel.find({ [key]: value }).exec();
+    debug(data, 'searchData');
     if (!data) throw new Error('User not found trying search');
     return data;
   }

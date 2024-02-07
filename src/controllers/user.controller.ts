@@ -1,11 +1,13 @@
 /* eslint-disable no-unused-vars */
 import bcrypt from 'bcrypt';
+import createDebug from 'debug';
 import { NextFunction, Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
 import { AuthVerificator } from '../middlewares/auth.verificator.js';
 import { UserRepository } from '../repository/user/user.repository.js';
 import { CloudinaryService } from '../services/cloudinary.service.js';
 
+const debug = createDebug('SN:Controller:UserController');
 export class UserController {
   cloudinary: CloudinaryService;
   constructor(private repo: UserRepository) {
@@ -18,11 +20,10 @@ export class UserController {
       const path = req.file.destination + '/' + req.file.filename;
       const image = await this.cloudinary.uploadImage(path);
       req.body.avatar = image;
-
       const saltRounds = 10;
       req.body.password = await bcrypt.hash(req.body.password, saltRounds);
-
       const data = await this.repo.create(req.body);
+
       res.status(201);
       res.json(data);
     } catch (error) {
@@ -66,6 +67,25 @@ export class UserController {
     try {
       const data = await this.repo.getById(req.params.id);
       res.json(data);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async search(req: Request, res: Response, next: NextFunction) {
+    try {
+      if (
+        typeof req.query.key === 'string' &&
+        typeof req.query.value !== 'undefined'
+      ) {
+        const data = await this.repo.search({
+          key: req.query.key,
+          value: req.query.value,
+        });
+        res.json(data);
+      } else {
+        res.status(400).json({ error: 'Invalid parameters' });
+      }
     } catch (error) {
       next(error);
     }
