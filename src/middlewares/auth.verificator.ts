@@ -28,7 +28,7 @@ export class AuthVerificator {
     }
   }
 
-  async authenticacion(req: Request, _res: Response, next: NextFunction) {
+  async postAuthentication(req: Request, _res: Response, next: NextFunction) {
     try {
       const postRepo = new PostRepository();
       const post = await postRepo.getById(req.params.id);
