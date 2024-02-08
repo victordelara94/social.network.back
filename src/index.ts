@@ -4,7 +4,7 @@ import mongoose from 'mongoose';
 import { app } from './app.js';
 import { dbConnect } from './db/db.js';
 
-const debug = createDebug('SN:index');
+const debug = createDebug('SN:INDEX');
 const PORT = process.env.PORT ?? 3000;
 
 const server = createServer(app);
@@ -12,7 +12,7 @@ dbConnect()
   .then(() => {
     server.listen(PORT);
     mongoose.connection.on('connected', () => {
-      console.log('Connected to DB:', mongoose.connection.db.databaseName);
+      debug('Connected to DB:', mongoose.connection.db.databaseName);
     });
   })
   .catch((error) => {
@@ -37,8 +37,8 @@ server.on('listening', () => {
   }
 
   debug('Listening');
-  console.log(`Listening on ${bind}`);
+  debug(`Listening on ${bind}`);
 });
 server.on('error', (error) => {
-  console.log(`Error,${error.message} `);
+  debug(`Error,${error.message} `);
 });

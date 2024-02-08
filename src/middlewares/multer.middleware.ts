@@ -1,7 +1,7 @@
 import createDebug from 'debug';
 import { NextFunction, Request, Response } from 'express';
 import multer from 'multer';
-const debug = createDebug('GL:Middleware:Files.Interceptor');
+const debug = createDebug('SN:MulterMiddleware');
 
 export class MulterMiddleware {
   constructor() {
@@ -19,7 +19,7 @@ export class MulterMiddleware {
 
     const upload = multer({ storage });
     const middleware = upload.single(fileName);
-    console.log('POST UPLOAD:SINGLE');
+    debug('POST UPLOAD:SINGLE');
     return (req: Request, res: Response, next: NextFunction) => {
       const prevBody = req.body;
       middleware(req, res, next);

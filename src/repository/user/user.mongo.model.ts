@@ -2,9 +2,9 @@ import { Schema, model } from 'mongoose';
 import { User } from '../../entities/user.entity.js';
 
 const userSchema = new Schema<User>({
-  userName: { type: String, required: true, unique: true },
+  userName: { type: String, required: true },
   password: { type: String, required: true },
-  email: { type: String, required: true, unique: true },
+  email: { type: String, required: true },
   avatar: {
     type: {
       publicId: { type: String },
@@ -13,7 +13,7 @@ const userSchema = new Schema<User>({
       format: { type: String },
       url: { type: String },
     },
-  }, // Optional: URL to the profile image
+  },
   followers: [{ type: Schema.Types.ObjectId, ref: 'User' }],
   following: [{ type: Schema.Types.ObjectId, ref: 'User' }],
   isPrivate: { type: Boolean, default: false },
@@ -28,4 +28,4 @@ userSchema.set('toJSON', {
   },
 });
 
-export const UserModel = model('User', userSchema, 'user');
+export const UserModel = model('User', userSchema, 'users');

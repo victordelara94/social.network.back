@@ -4,7 +4,7 @@ import createDebug from 'debug';
 import { cloudinary } from '../config.js';
 import { ImgData } from '../types/types.js';
 
-const debug = createDebug('GL:Services:MediaFiles');
+const debug = createDebug('Services:CloudinaryService');
 
 export class CloudinaryService {
   private cloudinary: typeof cloudinaryBase.v2;
