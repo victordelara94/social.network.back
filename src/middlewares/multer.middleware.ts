@@ -16,8 +16,9 @@ export class MulterMiddleware {
         callback(null, file.originalname);
       },
     });
-
+    debug('PreUpload', storage);
     const upload = multer({ storage });
+    debug('multer()', upload);
     const middleware = upload.single(fileName);
     debug('POST UPLOAD:SINGLE');
     return (req: Request, res: Response, next: NextFunction) => {
