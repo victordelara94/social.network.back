@@ -23,7 +23,7 @@ export class PostRouter {
     this.router.get(
       '/',
       this.authInterceptor.authorizate.bind(this.authInterceptor),
-      this.controller.getAll.bind(this.controller)
+      this.controller.getFriendsPosts.bind(this.controller)
     );
 
     this.router.post(
@@ -40,7 +40,7 @@ export class PostRouter {
     this.router.patch(
       '/:id',
       this.authInterceptor.authorizate.bind(this.authInterceptor),
-      this.authInterceptor.authenticacion.bind(this.authInterceptor),
+      this.authInterceptor.postAuthentication.bind(this.authInterceptor),
       this.controller.update.bind(this.controller)
     );
   }

@@ -1,5 +1,5 @@
 export interface Repository<T extends { id: string }> {
-  getAll(): Promise<T[]>;
+  getAll?(): Promise<T[]>;
   getById?(_id: T['id']): Promise<T>;
   // eslint-disable-next-line no-unused-vars
   search?({ key, value }: { key: keyof T; value: unknown }): Promise<T[]>;
