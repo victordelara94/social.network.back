@@ -1,3 +1,4 @@
+import { ImgData } from '../types/types.js';
 import { Comment } from './comment.entity.js';
 import { User } from './user.entity.js';
 
@@ -7,5 +8,6 @@ export type Post = {
   description: string;
   author: User;
   likes: number;
+  image?: ImgData;
   comments: Comment[];
 };
