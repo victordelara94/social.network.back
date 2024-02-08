@@ -40,6 +40,7 @@ export class PostRouter {
     this.router.patch(
       '/:id',
       this.authInterceptor.authorizate.bind(this.authInterceptor),
+      this.authInterceptor.authenticacion.bind(this.authInterceptor),
       this.controller.update.bind(this.controller)
     );
   }
