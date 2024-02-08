@@ -23,9 +23,9 @@ export class UserRepository implements Repository<User> {
     return data;
   }
 
-  async create(newData: Omit<User, 'id'>): Promise<User> {
-    debug(newData, 'REPO CREATE');
-    const data = await UserModel.create(newData);
+  async create(newItem: Omit<User, 'id'>): Promise<User> {
+    debug(newItem, 'REPO CREATE');
+    const data = await UserModel.create(newItem);
     return data;
   }
 
