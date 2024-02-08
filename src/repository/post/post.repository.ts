@@ -5,9 +5,7 @@ import { PostModel } from './post.mongo.model.js';
 const debug = createDebug('SN:Repo:PostRepo');
 
 export class PostRepository implements Repository<Post> {
-  urlBase: string;
-  constructor(urlBase: string) {
-    this.urlBase = urlBase;
+  constructor() {
     debug('instantiated');
   }
 
