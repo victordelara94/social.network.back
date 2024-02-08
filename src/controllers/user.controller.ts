@@ -3,6 +3,7 @@ import bcrypt from 'bcrypt';
 import createDebug from 'debug';
 import { NextFunction, Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
+import { User } from '../entities/user.entity.js';
 import { AuthVerificator } from '../middlewares/auth.verificator.js';
 import { UserRepository } from '../repository/user/user.repository.js';
 import { CloudinaryService } from '../services/cloudinary.service.js';
@@ -86,6 +87,43 @@ export class UserController {
       } else {
         res.status(400).json({ error: 'Invalid parameters' });
       }
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async follow(req: Request, res: Response, next: NextFunction) {
+    try {
+      const followed: User = req.body;
+      const user = await this.repo.getById(req.body.validatedId);
+      followed.followers.push(user);
+      this.repo.update(followed.id, followed);
+      user.following.push(followed);
+      const data = await this.repo.update(user.id, user);
+      res.status(201);
+      res.json(data);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async unfollow(req: Request, res: Response, next: NextFunction) {
+    try {
+      const unFollowed: User = req.body;
+      const user = await this.repo.getById(req.body.validatedId);
+      const newFollowerData = unFollowed.followers.filter(
+        (follower) => follower.id !== user.id
+      );
+      this.repo.update(unFollowed.id, { followers: newFollowerData });
+
+      const newFollowingData = user.following.filter(
+        (followed) => followed.id !== req.body.id
+      );
+      const data = await this.repo.update(user.id, {
+        following: newFollowingData,
+      });
+      res.status(201);
+      res.json(data);
     } catch (error) {
       next(error);
     }
