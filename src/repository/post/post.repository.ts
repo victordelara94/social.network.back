@@ -1,7 +1,7 @@
 import createDebug from 'debug';
-import { Post } from '../../entities/post.entity';
-import { Repository } from '../repository.interface';
-import { PostModel } from './post.mongo.model';
+import { Post } from '../../entities/post.entity.js';
+import { Repository } from '../repository.interface.js';
+import { PostModel } from './post.mongo.model.js';
 const debug = createDebug('SN:Repo:PostRepo');
 
 export class PostRepository implements Repository<Post> {
@@ -21,17 +21,25 @@ export class PostRepository implements Repository<Post> {
     return data;
   }
 
+  async getById(id: string): Promise<Post> {
+    const data = await PostModel.findById(id).exec();
+
+    if (!data) throw new Error('Post not Found trying getById');
+
+    return data;
+  }
+
   async update(id: string, updatedItem: Partial<Post>): Promise<Post> {
     const data = await PostModel.findByIdAndUpdate(id, updatedItem, {
       new: true,
     }).exec();
-    if (!data) throw new Error('User not found trying update');
+    if (!data) throw new Error('Post not found trying update');
 
     return data;
   }
 
   async delete(id: string): Promise<void> {
     const result = await PostModel.findByIdAndDelete(id);
-    if (!result) throw new Error('User not found in file system trying delete');
+    if (!result) throw new Error('Post not found in file system trying delete');
   }
 }

@@ -7,6 +7,16 @@ const PostSchema = new Schema<Post>({
   author: { type: Schema.Types.ObjectId, ref: 'User' },
   comments: [{ type: Schema.Types.ObjectId, ref: 'Comment' }],
   likes: { type: Number, default: 0 },
+  image: {
+    type: {
+      publicId: { type: String },
+      width: { type: Number },
+      height: { type: Number },
+      format: { type: String },
+      url: { type: String },
+    },
+    required: false,
+  },
 });
 
 PostSchema.set('toJSON', {
