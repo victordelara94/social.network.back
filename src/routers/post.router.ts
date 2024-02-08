@@ -23,7 +23,7 @@ export class PostRouter {
     this.router.get(
       '/',
       this.authInterceptor.authorizate.bind(this.authInterceptor),
-      this.controller.getAll.bind(this.controller)
+      this.controller.getFriendsPosts.bind(this.controller)
     );
 
     this.router.post(

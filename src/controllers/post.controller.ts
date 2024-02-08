@@ -36,9 +36,28 @@ export class PostController {
     }
   }
 
-  async getAll(_req: Request, res: Response, next: NextFunction) {
+  async getFriendsPosts(req: Request, res: Response, next: NextFunction) {
     try {
-      const data = await this.postRepo.getAll();
+      const currentUser = await this.userRepo.getById(req.body.validatedId);
+      const friendsIds = currentUser.following.map((user) => user.id);
+      const friends1 = currentUser.following;
+      // Const friends = await Promise.all(
+      //   friendsIds.map((id) => this.userRepo.getById(id))
+      // );
+      debug(friends1);
+      const mutualFriends = friends1.filter((friend) =>
+        friend.following.some((follow) => follow.id === currentUser.id)
+      );
+
+      const notPrivateFriends = friends1.filter((friend) => !friend.isPrivate);
+      const validFriendSet = new Set([...mutualFriends, ...notPrivateFriends]);
+      const validFriends = Array.from(validFriendSet);
+
+      const data = await Promise.all(
+        validFriends.map((friend) =>
+          this.postRepo.search({ key: 'author', value: friend.id })
+        )
+      );
       res.json(data);
     } catch (error) {
       next(error);

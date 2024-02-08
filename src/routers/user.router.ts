@@ -41,5 +41,10 @@ export class UserRouter {
       this.controller.register.bind(this.controller)
     );
     this.router.patch('/login', this.controller.login.bind(this.controller));
+    this.router.patch(
+      '/',
+      this.authInterceptor.authorizate.bind(this.authInterceptor),
+      this.controller.update.bind(this.controller)
+    );
   }
 }

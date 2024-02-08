@@ -14,8 +14,18 @@ export class PostRepository implements Repository<Post> {
     return data;
   }
 
-  async getAll(): Promise<Post[]> {
-    const data = await PostModel.find().exec();
+  async search({
+    key,
+    value,
+  }: {
+    key: string;
+    value: unknown;
+  }): Promise<Post[]> {
+    const data = await PostModel.find({ [key]: value })
+      .populate('author')
+      .exec();
+    debug(data, 'searchData');
+    if (!data) throw new Error('Post not found trying search');
     return data;
   }
 

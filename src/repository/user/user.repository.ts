@@ -15,8 +15,15 @@ export class UserRepository implements Repository<User> {
     return data;
   }
 
+  // Async getFriendsData(friendIds: string[]): Promise<User[]> {
+  //   const friendsData = await UserModel.find({
+  //     _id: { $in: friendIds },
+  //   }).exec();
+  //   return friendsData;
+  // }
+
   async getById(id: string): Promise<User> {
-    const data = await UserModel.findById(id).exec();
+    const data = await UserModel.findById(id).populate('following', {}).exec();
 
     if (!data) throw new Error('User not Found trying getById');
 
@@ -37,7 +44,6 @@ export class UserRepository implements Repository<User> {
     value: unknown;
   }): Promise<User[]> {
     const data = await UserModel.find({ [key]: value }).exec();
-    debug(data, 'searchData');
     if (!data) throw new Error('User not found trying search');
     return data;
   }
