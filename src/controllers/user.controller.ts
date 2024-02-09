@@ -94,14 +94,28 @@ export class UserController {
 
   async follow(req: Request, res: Response, next: NextFunction) {
     try {
-      const followed: User = req.body;
+      const { userToFollow } = req.body;
+
+      if (userToFollow.id === req.body.validatedId) {
+        throw new Error('You cant add yourself');
+      }
+
       const user = await this.repo.getById(req.body.validatedId);
-      followed.followers.push(user);
-      this.repo.update(followed.id, followed);
-      user.following.push(followed);
-      const data = await this.repo.update(user.id, user);
-      res.status(201);
+      const actualFriend = user.following.find(
+        (item) => item.id === userToFollow.id
+      );
+      if (actualFriend) {
+        throw new Error('Already in your following list');
+      }
+
+      userToFollow.followers.push(user);
+      await this.repo.update(userToFollow.id, userToFollow);
+
+      user.following.push(userToFollow);
+      const data = await this.repo.update(req.body.validatedId, user);
       res.json(data);
+
+      res.status(201);
     } catch (error) {
       next(error);
     }
@@ -109,15 +123,23 @@ export class UserController {
 
   async unfollow(req: Request, res: Response, next: NextFunction) {
     try {
-      const unFollowed: User = req.body;
+      const { userToUnfollow }: { userToUnfollow: User } = req.body;
       const user = await this.repo.getById(req.body.validatedId);
-      const newFollowerData = unFollowed.followers.filter(
+
+      const actualFriend = user.following.find(
+        (item) => item.id === userToUnfollow.id
+      );
+      if (!actualFriend) {
+        throw new Error('Not already in your following list');
+      }
+
+      const newFollowerData = userToUnfollow.followers.filter(
         (follower) => follower.id !== user.id
       );
-      this.repo.update(unFollowed.id, { followers: newFollowerData });
+      this.repo.update(userToUnfollow.id, { followers: newFollowerData });
 
       const newFollowingData = user.following.filter(
-        (followed) => followed.id !== req.body.id
+        (userToFollow) => userToFollow.id !== req.body.id
       );
       const data = await this.repo.update(user.id, {
         following: newFollowingData,
@@ -131,7 +153,7 @@ export class UserController {
 
   async update(req: Request, res: Response, next: NextFunction) {
     try {
-      const data = await this.repo.update(req.body.validatedId, req.body);
+      const data = await this.repo.update(req.params.validatedId, req.body);
       res.json(data);
     } catch (error) {
       next(error);

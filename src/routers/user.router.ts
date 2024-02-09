@@ -20,6 +20,12 @@ export class UserRouter {
   }
 
   configure() {
+    this.router.post(
+      '/register',
+      this.multerMiddleware.singleFileStore('avatar'),
+      this.controller.register.bind(this.controller)
+    );
+    this.router.patch('/login', this.controller.login.bind(this.controller));
     this.router.get(
       '/',
       this.authInterceptor.authorizate.bind(this.authInterceptor),
@@ -35,22 +41,7 @@ export class UserRouter {
       this.authInterceptor.authorizate.bind(this.authInterceptor),
       this.controller.getById.bind(this.controller)
     );
-    this.router.post(
-      '/register',
-      this.multerMiddleware.singleFileStore('avatar'),
-      this.controller.register.bind(this.controller)
-    );
-    this.router.patch('/login', this.controller.login.bind(this.controller));
-    this.router.patch(
-      '/',
-      this.authInterceptor.authorizate.bind(this.authInterceptor),
-      this.controller.update.bind(this.controller)
-    );
-    this.router.patch(
-      '/',
-      this.authInterceptor.authorizate.bind(this.authInterceptor),
-      this.controller.update.bind(this.controller)
-    );
+
     this.router.patch(
       '/follow',
       this.authInterceptor.authorizate.bind(this.authInterceptor),
@@ -60,6 +51,11 @@ export class UserRouter {
       '/unfollow',
       this.authInterceptor.authorizate.bind(this.authInterceptor),
       this.controller.unfollow.bind(this.controller)
+    );
+    this.router.patch(
+      '/:id',
+      this.authInterceptor.authorizate.bind(this.authInterceptor),
+      this.controller.update.bind(this.controller)
     );
   }
 }
