@@ -15,4 +15,4 @@ CommentSchema.set('toJSON', {
   },
 });
 
-export const commentModel = model('Comment', CommentSchema, 'comments');
+export const CommentModel = model('Comment', CommentSchema, 'comments');
