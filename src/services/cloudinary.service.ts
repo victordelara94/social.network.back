@@ -17,7 +17,6 @@ export class CloudinaryService {
       api_secret: cloudinary.secret,
     });
     debug('Instantiated');
-    debug('key:', this.cloudinary.config().api_key);
   }
 
   async uploadImage(imagePath: string) {

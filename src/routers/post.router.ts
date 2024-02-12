@@ -25,7 +25,11 @@ export class PostRouter {
       this.authInterceptor.authorizate.bind(this.authInterceptor),
       this.controller.getFriendsPosts.bind(this.controller)
     );
-
+    this.router.get(
+      '/:id',
+      this.authInterceptor.authorizate.bind(this.authInterceptor),
+      this.controller.getUserPosts.bind(this.controller)
+    );
     this.router.post(
       '/',
       this.authInterceptor.authorizate.bind(this.authInterceptor),
@@ -36,6 +40,11 @@ export class PostRouter {
       '/comment/:id',
       this.authInterceptor.authorizate.bind(this.authInterceptor),
       this.controller.addComment.bind(this.controller)
+    );
+    this.router.patch(
+      '/reaction/:id',
+      this.authInterceptor.authorizate.bind(this.authInterceptor),
+      this.controller.update.bind(this.controller)
     );
     this.router.patch(
       '/:id',

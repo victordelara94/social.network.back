@@ -16,7 +16,6 @@ export class UserRepository implements Repository<User> {
   }
 
   async getById(id: string): Promise<User> {
-    debug(id);
     const data = await UserModel.findById(id)
       .populate('following', {})
       .populate('followers', {})
@@ -27,7 +26,6 @@ export class UserRepository implements Repository<User> {
   }
 
   async create(newItem: Omit<User, 'id'>): Promise<User> {
-    debug(newItem, 'REPO CREATE');
     const data = await UserModel.create(newItem);
     return data;
   }
@@ -39,7 +37,10 @@ export class UserRepository implements Repository<User> {
     key: string;
     value: unknown;
   }): Promise<User[]> {
-    const data = await UserModel.find({ [key]: value }).exec();
+    const data = await UserModel.find({ [key]: value })
+      .populate('following', {})
+      .populate('followers', {})
+      .exec();
     if (!data) throw new Error('User not found trying search');
     return data;
   }
@@ -47,7 +48,10 @@ export class UserRepository implements Repository<User> {
   async update(id: string, newData: Partial<User>): Promise<User> {
     const data = await UserModel.findByIdAndUpdate(id, newData, {
       new: true,
-    }).exec();
+    })
+      .populate('following', {})
+      .populate('followers', {})
+      .exec();
     if (!data) throw new Error('User not found trying update');
 
     return data;

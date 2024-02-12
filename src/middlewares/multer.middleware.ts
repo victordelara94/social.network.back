@@ -9,18 +9,14 @@ export class MulterMiddleware {
   }
 
   singleFileStore(fileName: string) {
-    debug(fileName, 'filename');
     const storage = multer.diskStorage({
       destination: './uploads',
       filename(_req, file, callback) {
         callback(null, file.originalname);
       },
     });
-    debug('PreUpload', storage);
     const upload = multer({ storage });
-    debug('multer()', upload);
     const middleware = upload.single(fileName);
-    debug('POST UPLOAD:SINGLE');
     return (req: Request, res: Response, next: NextFunction) => {
       const prevBody = req.body;
       middleware(req, res, next);

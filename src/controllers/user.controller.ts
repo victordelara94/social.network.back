@@ -3,7 +3,6 @@ import bcrypt from 'bcrypt';
 import createDebug from 'debug';
 import { NextFunction, Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
-import { User } from '../entities/user.entity.js';
 import { AuthVerificator } from '../middlewares/auth.verificator.js';
 import { UserRepository } from '../repository/user/user.repository.js';
 import { CloudinaryService } from '../services/cloudinary.service.js';
@@ -94,7 +93,7 @@ export class UserController {
 
   async follow(req: Request, res: Response, next: NextFunction) {
     try {
-      const { userToFollow } = req.body;
+      const userToFollow = await this.repo.getById(req.body.id);
 
       if (userToFollow.id === req.body.validatedId) {
         throw new Error('You cant add yourself');
@@ -109,9 +108,13 @@ export class UserController {
       }
 
       userToFollow.followers.push(user);
-      await this.repo.update(userToFollow.id, userToFollow);
+
+      await this.repo.update(userToFollow.id, {
+        followers: userToFollow.followers,
+      });
 
       user.following.push(userToFollow);
+
       const data = await this.repo.update(req.body.validatedId, user);
       res.json(data);
 
@@ -123,7 +126,7 @@ export class UserController {
 
   async unfollow(req: Request, res: Response, next: NextFunction) {
     try {
-      const { userToUnfollow }: { userToUnfollow: User } = req.body;
+      const userToUnfollow = await this.repo.getById(req.body.id);
       const user = await this.repo.getById(req.body.validatedId);
 
       const actualFriend = user.following.find(
@@ -136,7 +139,7 @@ export class UserController {
       const newFollowerData = userToUnfollow.followers.filter(
         (follower) => follower.id !== user.id
       );
-      this.repo.update(userToUnfollow.id, { followers: newFollowerData });
+      await this.repo.update(userToUnfollow.id, { followers: newFollowerData });
 
       const newFollowingData = user.following.filter(
         (userToFollow) => userToFollow.id !== req.body.id
@@ -153,7 +156,7 @@ export class UserController {
 
   async update(req: Request, res: Response, next: NextFunction) {
     try {
-      const data = await this.repo.update(req.params.validatedId, req.body);
+      const data = await this.repo.update(req.params.id, req.body);
       res.json(data);
     } catch (error) {
       next(error);
