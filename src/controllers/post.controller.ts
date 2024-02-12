@@ -50,11 +50,8 @@ export class PostController {
   async getFriendsPosts(req: Request, res: Response, next: NextFunction) {
     try {
       const currentUser = await this.userRepo.getById(req.body.validatedId);
-      // Const friendsIds = currentUser.following.map((user) => user.id);
+
       const friends1 = currentUser.following;
-      // Const friends = await Promise.all(
-      //   friendsIds.map((id) => this.userRepo.getById(id))
-      // );
 
       const mutualFriends = friends1.filter((friend) =>
         friend.following.some((follow) => follow.id === currentUser.id)
@@ -69,7 +66,6 @@ export class PostController {
           this.postRepo.search({ key: 'author', value: friend.id })
         )
       );
-
       res.json(data.flat());
     } catch (error) {
       next(error);
