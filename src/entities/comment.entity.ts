@@ -4,8 +4,7 @@ import { User } from './user.entity.js';
 export type Comment = {
   id: string;
   content: string;
-  user: User;
-  post: Post;
-  isPrivate: boolean;
+  author: User;
+  postTarget: Post;
   likes: number;
 };

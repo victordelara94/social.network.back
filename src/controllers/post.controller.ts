@@ -23,10 +23,9 @@ export class PostController {
         req.body.image = image;
       }
 
-      debug(req.body.validatedId, 'validated id');
       const author = await this.userRepo.getById(req.body.validatedId);
       req.body.author = author;
-      debug(req.body, 'POST EN CREATE');
+
       const data = await this.postRepo.create(req.body);
 
       res.status(201);
@@ -36,15 +35,27 @@ export class PostController {
     }
   }
 
+  async getUserPosts(req: Request, res: Response, next: NextFunction) {
+    try {
+      const userPosts = await this.postRepo.search({
+        key: 'author',
+        value: req.params.id,
+      });
+      res.json(userPosts);
+    } catch (error) {
+      next(error);
+    }
+  }
+
   async getFriendsPosts(req: Request, res: Response, next: NextFunction) {
     try {
       const currentUser = await this.userRepo.getById(req.body.validatedId);
-      const friendsIds = currentUser.following.map((user) => user.id);
+      // Const friendsIds = currentUser.following.map((user) => user.id);
       const friends1 = currentUser.following;
       // Const friends = await Promise.all(
       //   friendsIds.map((id) => this.userRepo.getById(id))
       // );
-      debug(friends1);
+
       const mutualFriends = friends1.filter((friend) =>
         friend.following.some((follow) => follow.id === currentUser.id)
       );
@@ -58,7 +69,8 @@ export class PostController {
           this.postRepo.search({ key: 'author', value: friend.id })
         )
       );
-      res.json(data);
+
+      res.json(data.flat());
     } catch (error) {
       next(error);
     }

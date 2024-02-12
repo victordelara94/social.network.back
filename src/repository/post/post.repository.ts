@@ -22,9 +22,9 @@ export class PostRepository implements Repository<Post> {
     value: unknown;
   }): Promise<Post[]> {
     const data = await PostModel.find({ [key]: value })
-      .populate('author')
+      .populate('author', {})
       .exec();
-    debug(data, 'searchData');
+
     if (!data) throw new Error('Post not found trying search');
     return data;
   }

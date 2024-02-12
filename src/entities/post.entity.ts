@@ -8,6 +8,6 @@ export type Post = {
   description: string;
   author: User;
   likes: number;
-  image?: ImgData;
+  image: ImgData;
   comments: Comment[];
 };

@@ -12,9 +12,8 @@ export class AuthVerificator {
     try {
       const token = req.get('Authorization')?.split(' ')[1];
       if (!token) throw new Error('Invalid token no token provided');
-      //
+
       const result = jwt.verify(token, AuthVerificator.secret);
-      debug(result, 'result en auth');
       if (typeof result === 'string') {
         throw new Error('Invalid token');
       }
@@ -32,7 +31,7 @@ export class AuthVerificator {
     try {
       const postRepo = new PostRepository();
       const post = await postRepo.getById(req.params.id);
-      debug(req.body.validatedId, post.author.id);
+
       if (post.author.id !== req.body.validatedId) {
         throw new Error('User is not the creator of the post');
       }
