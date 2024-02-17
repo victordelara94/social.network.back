@@ -1,9 +1,8 @@
 import { User } from './user.entity.js';
-
-export type Comment = {
+export type Message = {
   id: string;
   content: string;
   author: User;
-  likes: number;
+  to: User;
   date: Date;
 };

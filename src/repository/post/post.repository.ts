@@ -44,7 +44,13 @@ export class PostRepository implements Repository<Post> {
   async update(id: string, updatedItem: Partial<Post>): Promise<Post> {
     const data = await PostModel.findByIdAndUpdate(id, updatedItem, {
       new: true,
-    }).exec();
+    })
+      .populate('author', {})
+      .populate({
+        path: 'comments',
+        populate: { path: 'author', select: 'userName' },
+      })
+      .exec();
     if (!data) throw new Error('Post not found trying update');
 
     return data;

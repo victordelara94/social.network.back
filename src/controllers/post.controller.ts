@@ -51,13 +51,16 @@ export class PostController {
     try {
       const currentUser = await this.userRepo.getById(req.body.validatedId);
 
-      const friends1 = currentUser.following;
-
-      const mutualFriends = friends1.filter((friend) =>
+      const friends = await Promise.all(
+        currentUser.following
+          .map((user) => this.userRepo.getById(user.id))
+          .flat()
+      );
+      const mutualFriends = friends.filter((friend) =>
         friend.following.some((follow) => follow.id === currentUser.id)
       );
 
-      const notPrivateFriends = friends1.filter((friend) => !friend.isPrivate);
+      const notPrivateFriends = friends.filter((friend) => !friend.isPrivate);
       const validFriendSet = new Set([...mutualFriends, ...notPrivateFriends]);
       const validFriends = Array.from(validFriendSet);
 
@@ -66,6 +69,7 @@ export class PostController {
           this.postRepo.search({ key: 'author', value: friend.id })
         )
       );
+      debug(data.flat());
       res.json(data.flat());
     } catch (error) {
       next(error);

@@ -17,8 +17,8 @@ export class UserRepository implements Repository<User> {
 
   async getById(id: string): Promise<User> {
     const data = await UserModel.findById(id)
-      .populate('following', {})
-      .populate('followers', {})
+      .populate('following')
+      .populate('followers')
       .exec();
 
     if (!data) throw new Error('User not Found trying getById');

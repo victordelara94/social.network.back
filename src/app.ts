@@ -2,6 +2,7 @@ import cors from 'cors';
 import createDebug from 'debug';
 import express from 'express';
 import morgan from 'morgan';
+import { Server } from 'socket.io';
 import { CommentController } from './controllers/comment.controller.js';
 import { PostController } from './controllers/post.controller.js';
 import { UserController } from './controllers/user.controller.js';
@@ -14,7 +15,7 @@ import { UserRouter } from './routers/user.router.js';
 
 const debug = createDebug('SN:App');
 export const app = express();
-
+export const io = new Server();
 debug('APP:Started');
 
 app.use(morgan('dev'));
