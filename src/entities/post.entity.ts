@@ -4,10 +4,10 @@ import { User } from './user.entity.js';
 
 export type Post = {
   id: string;
-  title: string;
-  description: string;
+  content: string;
   author: User;
-  likes: number;
+  likes: User[];
   image: ImgData;
   comments: Comment[];
+  date: Date;
 };

@@ -1,13 +1,14 @@
 import { Schema, model } from 'mongoose';
-import { Comment } from '../../entities/comment.entity';
-const CommentSchema = new Schema<Comment>({
+import { Response } from '../../entities/response.entity';
+const ResponseSchema = new Schema<Response>({
   content: { type: String, required: true },
   author: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+  comment: { type: Schema.Types.ObjectId, ref: 'Comment', required: true },
   likes: [{ type: Schema.Types.ObjectId, ref: 'User' }],
   date: { type: Date, default: Date.now },
 });
 
-CommentSchema.set('toJSON', {
+ResponseSchema.set('toJSON', {
   transform(_document, returnedObject) {
     returnedObject.id = returnedObject._id;
     delete returnedObject._id;
@@ -15,4 +16,4 @@ CommentSchema.set('toJSON', {
   },
 });
 
-export const CommentModel = model('Comment', CommentSchema, 'comments');
+export const ResponseModel = model('Response', ResponseSchema, 'responses');
