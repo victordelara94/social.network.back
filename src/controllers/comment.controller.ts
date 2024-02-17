@@ -22,7 +22,6 @@ export class CommentController {
       const comment = await this.CommentRepo.create(req.body);
       post.comments.push(comment);
       const postWithComments = await this.postRepo.update(post.id, post);
-      console.log(postWithComments);
       res.status(201);
       res.json(postWithComments);
     } catch (error) {

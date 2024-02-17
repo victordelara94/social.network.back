@@ -1,9 +1,10 @@
+import { Comment } from './comment.entity.js';
 import { User } from './user.entity.js';
 
-export type Comment = {
+export type Response = {
   id: string;
   content: string;
   author: User;
   likes: number;
-  date: Date;
+  comment: Comment;
 };
