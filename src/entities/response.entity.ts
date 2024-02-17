@@ -5,6 +5,7 @@ export type Response = {
   id: string;
   content: string;
   author: User;
-  likes: number;
+  likes: User[];
   comment: Comment;
+  date: Date;
 };

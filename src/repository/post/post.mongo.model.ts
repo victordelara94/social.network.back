@@ -2,11 +2,10 @@ import { Schema, model } from 'mongoose';
 import { Post } from '../../entities/post.entity.js';
 
 const PostSchema = new Schema<Post>({
-  title: { type: String, required: true },
-  description: { type: String, required: true },
+  content: { type: String, required: true },
   author: { type: Schema.Types.ObjectId, ref: 'User' },
   comments: [{ type: Schema.Types.ObjectId, ref: 'Comment' }],
-  likes: { type: Number, default: 0 },
+  likes: [{ type: Schema.Types.ObjectId, ref: 'User' }],
   image: {
     type: {
       publicId: { type: String },
@@ -15,8 +14,9 @@ const PostSchema = new Schema<Post>({
       format: { type: String },
       url: { type: String },
     },
-    required: false,
+    required: true,
   },
+  date: { type: Date, default: Date.now },
 });
 
 PostSchema.set('toJSON', {

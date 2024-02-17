@@ -5,6 +5,7 @@ import { User } from './user.entity.js';
 export type Notification = {
   id: string;
   type: string;
+  to: User;
   relationType: User | Comment | Response | Message;
   hasBeenRead: boolean;
   date: Date;

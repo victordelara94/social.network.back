@@ -5,7 +5,7 @@ const userSchema = new Schema<User>({
   userName: { type: String, required: true },
   password: { type: String, required: true },
   email: { type: String, required: true },
-  avatar: {
+  image: {
     type: {
       publicId: { type: String },
       width: { type: Number },

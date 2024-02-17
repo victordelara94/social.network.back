@@ -4,6 +4,6 @@ export type Comment = {
   id: string;
   content: string;
   author: User;
-  likes: number;
+  likes: User[];
   date: Date;
 };

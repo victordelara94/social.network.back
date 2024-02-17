@@ -10,6 +10,6 @@ export type User = Login & {
   email: string;
   following: User[];
   followers: User[];
-  avatar: ImgData;
+  image: ImgData;
   isPrivate: boolean;
 };
