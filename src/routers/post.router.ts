@@ -42,9 +42,14 @@ export class PostRouter {
       this.controller.addComment.bind(this.controller)
     );
     this.router.patch(
-      '/reaction/:id',
+      '/likes/:id',
       this.authInterceptor.authorizate.bind(this.authInterceptor),
-      this.controller.update.bind(this.controller)
+      this.controller.addLike.bind(this.controller)
+    );
+    this.router.patch(
+      '/dislikes/:id',
+      this.authInterceptor.authorizate.bind(this.authInterceptor),
+      this.controller.dislike.bind(this.controller)
     );
     this.router.patch(
       '/:id',
