@@ -28,4 +28,15 @@ export class CommentRepository implements Repository<Comment> {
     if (!result)
       throw new Error('Comment not found in file system trying delete');
   }
+
+  async getById(id: string): Promise<Comment> {
+    const data = await CommentModel.findById(id)
+      .populate('author')
+      .populate('likes', 'userName _id')
+      .exec();
+
+    if (!data) throw new Error('Post not Found trying getById');
+
+    return data;
+  }
 }
