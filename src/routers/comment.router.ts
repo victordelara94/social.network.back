@@ -23,5 +23,15 @@ export class CommentRouter {
       this.authInterceptor.authorizate.bind(this.authInterceptor),
       this.controller.create.bind(this.controller)
     );
+    this.router.patch(
+      '/likes/:id',
+      this.authInterceptor.authorizate.bind(this.authInterceptor),
+      this.controller.addLike.bind(this.controller)
+    );
+    this.router.patch(
+      '/dislikes/:id',
+      this.authInterceptor.authorizate.bind(this.authInterceptor),
+      this.controller.dislike.bind(this.controller)
+    );
   }
 }

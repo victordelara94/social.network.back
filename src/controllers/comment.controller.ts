@@ -42,7 +42,7 @@ export class CommentController {
       const user = await this.userRepo.getById(req.body.validatedId);
 
       comment.likes.push(user);
-      const data = await this.postRepo.update(comment.id, comment);
+      const data = await this.commentRepo.update(comment.id, comment);
       res.json(data);
     } catch (error) {
       next(error);
