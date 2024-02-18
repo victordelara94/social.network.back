@@ -85,6 +85,46 @@ export class PostController {
     }
   }
 
+  async addLike(req: Request, res: Response, next: NextFunction) {
+    try {
+      const post = await this.postRepo.getById(req.params.id);
+      const userAlreadyLiked = post.likes.find(
+        (user) => user.id.toString() === req.body.validatedId
+      );
+      if (userAlreadyLiked) {
+        throw Error(`The user has already liked to this post`);
+      }
+
+      const user = await this.userRepo.getById(req.body.validatedId);
+
+      post.likes.push(user);
+      const data = await this.postRepo.update(post.id, post);
+      res.json(data);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async dislike(req: Request, res: Response, next: NextFunction) {
+    try {
+      const post = await this.postRepo.getById(req.params.id);
+      const userAlreadyLiked = post.likes.find(
+        (user) => user.id.toString() === req.body.validatedId
+      );
+      if (!userAlreadyLiked) {
+        throw Error(`The user hasn´t already liked to this post`);
+      }
+
+      const newLikesData = post.likes.filter(
+        (item) => item.id !== req.body.validatedId
+      );
+      const data = await this.postRepo.update(post.id, { likes: newLikesData });
+      res.json(data);
+    } catch (error) {
+      next(error);
+    }
+  }
+
   async addComment(req: Request, res: Response, next: NextFunction) {
     try {
       const post = await this.postRepo.getById(req.params.id);

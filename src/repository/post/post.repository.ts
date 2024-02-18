@@ -34,7 +34,10 @@ export class PostRepository implements Repository<Post> {
   }
 
   async getById(id: string): Promise<Post> {
-    const data = await PostModel.findById(id).populate('author').exec();
+    const data = await PostModel.findById(id)
+      .populate('author')
+      .populate('likes', 'userName _id')
+      .exec();
 
     if (!data) throw new Error('Post not Found trying getById');
 

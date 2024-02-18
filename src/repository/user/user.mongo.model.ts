@@ -2,7 +2,7 @@ import { Schema, model } from 'mongoose';
 import { User } from '../../entities/user.entity.js';
 
 const userSchema = new Schema<User>({
-  userName: { type: String, required: true },
+  userName: { type: String, required: true, unique: true },
   password: { type: String, required: true },
   email: { type: String, required: true },
   image: {
