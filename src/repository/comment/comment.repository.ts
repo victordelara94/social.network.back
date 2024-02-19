@@ -35,7 +35,7 @@ export class CommentRepository implements Repository<Comment> {
       .populate('likes', 'userName _id')
       .exec();
 
-    if (!data) throw new Error('Post not Found trying getById');
+    if (!data) throw new Error('Comment not Found trying getById');
 
     return data;
   }
