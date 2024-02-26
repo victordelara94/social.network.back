@@ -4,6 +4,9 @@ const CommentSchema = new Schema<Comment>({
   content: { type: String, required: true },
   author: { type: Schema.Types.ObjectId, ref: 'User', required: true },
   likes: [{ type: Schema.Types.ObjectId, ref: 'User' }],
+  parentModel: { type: String, enum: ['Comment', 'Post'] },
+  parentId: { type: String, required: true },
+  nestedComments: [{ type: String, ref: 'Comment' }],
   date: { type: Date, default: Date.now },
 });
 

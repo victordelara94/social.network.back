@@ -124,15 +124,4 @@ export class PostController {
       next(error);
     }
   }
-
-  async addComment(req: Request, res: Response, next: NextFunction) {
-    try {
-      const post = await this.postRepo.getById(req.params.id);
-      post.comments.push(req.body);
-      const data = await this.postRepo.update(post.id, post);
-      res.json(data);
-    } catch (error) {
-      next(error);
-    }
-  }
 }

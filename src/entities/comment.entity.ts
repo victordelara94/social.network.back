@@ -5,5 +5,8 @@ export type Comment = {
   content: string;
   author: User;
   likes: User[];
+  nestedComments: Comment[];
+  parentModel: string;
+  parentId: string;
   date: Date;
 };

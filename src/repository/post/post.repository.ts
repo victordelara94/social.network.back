@@ -24,7 +24,7 @@ export class PostRepository implements Repository<Post> {
     const data = await PostModel.find({ [key]: value })
       .populate('author', {})
       .populate({
-        path: 'comments',
+        path: 'nestedComments',
         populate: { path: 'author', select: 'userName' },
       })
       .exec();
@@ -49,10 +49,7 @@ export class PostRepository implements Repository<Post> {
       new: true,
     })
       .populate('author', {})
-      .populate({
-        path: 'comments',
-        populate: { path: 'author', select: 'userName' },
-      })
+
       .exec();
     if (!data) throw new Error('Post not found trying update');
 

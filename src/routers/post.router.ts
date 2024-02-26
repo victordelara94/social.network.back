@@ -36,11 +36,7 @@ export class PostRouter {
       this.multerMiddleware.singleFileStore('image'),
       this.controller.create.bind(this.controller)
     );
-    this.router.patch(
-      '/comment/:id',
-      this.authInterceptor.authorizate.bind(this.authInterceptor),
-      this.controller.addComment.bind(this.controller)
-    );
+
     this.router.patch(
       '/likes/:id',
       this.authInterceptor.authorizate.bind(this.authInterceptor),
