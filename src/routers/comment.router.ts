@@ -19,9 +19,14 @@ export class CommentRouter {
 
   configure() {
     this.router.post(
-      '/:id',
+      '/intoComment',
       this.authInterceptor.authorizate.bind(this.authInterceptor),
-      this.controller.create.bind(this.controller)
+      this.controller.createIntoComment.bind(this.controller)
+    );
+    this.router.post(
+      '/intoPost',
+      this.authInterceptor.authorizate.bind(this.authInterceptor),
+      this.controller.createIntoPost.bind(this.controller)
     );
     this.router.patch(
       '/likes/:id',
@@ -32,6 +37,16 @@ export class CommentRouter {
       '/dislikes/:id',
       this.authInterceptor.authorizate.bind(this.authInterceptor),
       this.controller.dislike.bind(this.controller)
+    );
+    this.router.patch(
+      '/',
+      this.authInterceptor.authorizate.bind(this.authInterceptor),
+      this.controller.editComment.bind(this.controller)
+    );
+    this.router.delete(
+      '/:id',
+      this.authInterceptor.authorizate.bind(this.authInterceptor),
+      this.controller.deleteComment.bind(this.controller)
     );
   }
 }

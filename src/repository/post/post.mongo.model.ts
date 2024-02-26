@@ -4,7 +4,7 @@ import { Post } from '../../entities/post.entity.js';
 const PostSchema = new Schema<Post>({
   content: { type: String, required: true },
   author: { type: Schema.Types.ObjectId, ref: 'User' },
-  comments: [{ type: Schema.Types.ObjectId, ref: 'Comment' }],
+  nestedComments: [{ type: Schema.Types.ObjectId, ref: 'Comment' }],
   likes: [{ type: Schema.Types.ObjectId, ref: 'User' }],
   image: {
     type: {

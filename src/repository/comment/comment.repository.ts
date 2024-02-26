@@ -10,6 +10,7 @@ export class CommentRepository implements Repository<Comment> {
   }
 
   async create(newItem: Omit<Comment, 'id'>): Promise<Comment> {
+    debug(newItem);
     const data = await CommentModel.create(newItem);
     return data;
   }
@@ -37,6 +38,21 @@ export class CommentRepository implements Repository<Comment> {
 
     if (!data) throw new Error('Comment not Found trying getById');
 
+    return data;
+  }
+
+  async search({
+    key,
+    value,
+  }: {
+    key: string;
+    value: unknown;
+  }): Promise<Comment[]> {
+    const data = await CommentModel.find({ [key]: value })
+      .populate('author', {})
+      .exec();
+
+    if (!data) throw new Error('Comment not found trying search');
     return data;
   }
 }

@@ -8,6 +8,6 @@ export type Post = {
   author: User;
   likes: User[];
   image: ImgData;
-  comments: Comment[];
+  nestedComments: Comment[];
   date: Date;
 };
