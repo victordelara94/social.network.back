@@ -1,7 +1,7 @@
 import createDebug from 'debug';
 import { createServer } from 'http';
 import mongoose from 'mongoose';
-import { app, io } from './app.js';
+import { app, ioService } from './app.js';
 import { dbConnect } from './db/db.js';
 
 const debug = createDebug('SN:INDEX');
@@ -10,18 +10,7 @@ const PORT = process.env.PORT ?? 3000;
 const server = createServer(app);
 dbConnect()
   .then(() => {
-    io.on('conection', (socket) => {
-      console.log('A user connected');
-      socket.on(
-        'chat message',
-        ({ userName, message }: { userName: string; message: string }) => {
-          io.emit('chat message', { userName, message });
-        }
-      );
-      socket.on('disconnect', () => {
-        console.log('User disconnected');
-      });
-    });
+    ioService.on();
     server.listen(PORT);
     mongoose.connection.on('connected', () => {
       debug('Connected to DB:', mongoose.connection.db.databaseName);
