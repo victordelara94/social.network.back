@@ -10,7 +10,6 @@ export class CommentRepository implements Repository<Comment> {
   }
 
   async create(newItem: Omit<Comment, 'id'>): Promise<Comment> {
-    debug(newItem);
     const data = await CommentModel.create(newItem);
     return data;
   }

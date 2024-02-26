@@ -16,4 +16,4 @@ MessageSchema.set('toJSON', {
   },
 });
 
-export const messageModel = model('Message', MessageSchema, 'messages');
+export const MessageModel = model('Message', MessageSchema, 'messages');
