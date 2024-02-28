@@ -10,7 +10,7 @@ const PORT = process.env.PORT ?? 3000;
 const server = createServer(app);
 dbConnect()
   .then(() => {
-    ioService.on();
+    ioService.config();
     server.listen(PORT);
     mongoose.connection.on('connected', () => {
       debug('Connected to DB:', mongoose.connection.db.databaseName);

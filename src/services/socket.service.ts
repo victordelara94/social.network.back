@@ -1,99 +1,91 @@
 /* eslint-disable no-unused-vars */
-/* eslint-disable no-useless-constructor */
-import { Server } from 'socket.io';
 
+import createDebug from 'debug';
+import { Server, Socket } from 'socket.io';
+import { MessageController } from '../controllers/message.controller';
+const debug = createDebug('SN:SocketService');
 export class SocketService {
-  constructor(private io: Server) {}
+  constructor(
+    private io: Server,
+    private messageController: MessageController
+  ) {
+    debug('instantiated');
+  }
 
-  on() {
+  config() {
     this.io.on('connection', (socket) => {
+      const { userId } = socket.handshake.auth;
       console.log('A user connected');
-      socket.on(
-        'chat message',
-        ({
-          senderId,
-          receiverId,
-          message,
-        }: {
-          senderId: string;
-          receiverId: string;
-          message: string;
-        }) => {
-          this.emitMessageToSpecificUser({
-            receiverId,
-            senderId,
-            message,
-          });
-          this.saveMessage({ senderId, message });
-        }
-      );
-      socket.on(
-        'notification',
-        ({
-          senderId,
-          notification,
-        }: {
-          senderId: string;
-          notification: string;
-        }) => {
-          this.emitNotificationToSpecificUser({ senderId, notification });
-          this.saveNotificacition({ senderId, notification });
-        }
-      );
+      const events = socket.eventNames();
+
+      if (events.includes('chat message')) {
+        this.onMessage(socket, userId);
+      }
+
+      if (events.includes('notification')) {
+        this.onNotification(socket, userId);
+      }
+
       socket.on('disconnect', () => {
+        // Tendre que asignar a auth el id del usuario
+        this.io.emit('user-disconnected', { userId });
         console.log('User disconnected');
       });
     });
   }
 
-  private saveMessage({
-    senderId,
-    receiverId,
-    message,
-  }: {
-    senderId: string;
-    receiverId: string;
-    message: string;
-  }) {}
+  private onMessage(socket: Socket, userId: string) {
+    socket.on(
+      'chat message',
+      ({ receiverId, message }: { receiverId: string; message: string }) => {
+        this.emitMessageToSpecificUser({
+          receiverId,
+          userId,
+          message,
+        });
+      }
+    );
+  }
+
+  private onNotification(socket: Socket, userId: string) {
+    socket.on(
+      'notification',
+      ({ receiverId, type }: { receiverId: string; type: string }) => {
+        this.emitNotificationToSpecificUser({ type, userId, receiverId });
+      }
+    );
+  }
 
   private emitMessageToSpecificUser({
-    senderId,
+    userId,
     receiverId,
     message,
   }: {
-    senderId: string;
+    userId: string;
     receiverId: string;
     message: string;
   }) {
     const receiverSocket = this.io.sockets.sockets.get(receiverId);
     if (receiverSocket) {
-      this.io.to(receiverId).emit('chat message', { senderId, message });
+      this.io.to(receiverId).emit('chat message', { userId, message });
       this.emitNotificationToSpecificUser({
-        senderId,
-        notification: 'Message notification',
+        type: 'message',
+        userId,
+        receiverId,
       });
     }
-
-    this.saveMessage({ message, receiverId, senderId });
   }
 
-  private saveNotificacition({
-    senderId,
-    receiverId,
-    notification,
-  }: {
-    senderId: string;
-    receiverId: string;
-    notification: string;
-  }) {}
-
   private emitNotificationToSpecificUser({
-    senderId,
-    notification,
+    type,
+    userId,
+    receiverId,
   }: {
-    senderId: string;
-    notification: string;
+    type: string;
+    userId: string;
+    receiverId: string;
   }) {
-    console.log(senderId, notification);
+    const receiverSocket = this.io.sockets.sockets.get(receiverId);
+    this.io.to(receiverId).emit('notification', { type, userId });
   }
 }

@@ -1,29 +1,43 @@
 import createDebug from 'debug';
-import { Message } from '../../entities/message.entity';
-import { Repository } from '../repository.interface';
-import { MessageModel } from './message.mongo.model';
+import { Message } from '../../entities/message.entity.js';
+import { User } from '../../entities/user.entity.js';
+import { Repository } from '../repository.interface.js';
+import { MessageModel } from './message.mongo.model.js';
 const debug = createDebug('SN:Repo:MessageRepo');
 export class MessageRepository implements Repository<Message> {
   constructor() {
     debug('intantiated');
   }
 
-  async create(newItem: Omit<Message, 'id'>): Promise<Message> {
+  async create(newItem: Partial<Message>): Promise<Message> {
     const data = await MessageModel.create(newItem);
     return data;
   }
 
-  async search({
-    key,
-    value,
-  }: {
-    key: keyof Message;
-    value: unknown;
+  async searchConversationMessages(criteria: {
+    author: User;
+    receiver: User;
   }): Promise<Message[]> {
-    const messages = await MessageModel.find({ [key]: value });
-    if (!messages)
-      throw new Error(`Messages not found in file system trying search`);
-    return messages;
+    const { author, receiver } = criteria;
+
+    const conversationMessages = await MessageModel.find({
+      $or: [
+        { author, to: receiver },
+        { author: receiver, to: author },
+      ],
+    });
+    if (conversationMessages.length === 0)
+      throw new Error(
+        'Messags not found in file system trying search conversation messages'
+      );
+    return conversationMessages;
+  }
+
+  async getById(id: string): Promise<Message> {
+    const data = await MessageModel.findById(id).exec();
+
+    if (!data) throw new Error('Message not Found trying getById');
+    return data;
   }
 
   async delete(id: string): Promise<void> {

@@ -4,12 +4,15 @@ import express from 'express';
 import morgan from 'morgan';
 import { Server } from 'socket.io';
 import { CommentController } from './controllers/comment.controller.js';
+import { MessageController } from './controllers/message.controller.js';
 import { PostController } from './controllers/post.controller.js';
 import { UserController } from './controllers/user.controller.js';
 import { CommentRepository } from './repository/comment/comment.repository.js';
+import { MessageRepository } from './repository/message/message.repository.js';
 import { PostRepository } from './repository/post/post.repository.js';
 import { UserRepository } from './repository/user/user.repository.js';
 import { CommentRouter } from './routers/comment.router.js';
+import { MessageRouter } from './routers/message.router.js';
 import { PostRouter } from './routers/post.router.js';
 import { UserRouter } from './routers/user.router.js';
 import { SocketService } from './services/socket.service.js';
@@ -40,4 +43,11 @@ const commentController = new CommentController(
 );
 const commentRouter = new CommentRouter(commentController);
 app.use('/comments', commentRouter.router);
-export const ioService = new SocketService(io);
+const messageRepository = new MessageRepository();
+const messageController = new MessageController(
+  messageRepository,
+  userRepository
+);
+export const ioService = new SocketService(io, messageController);
+const messageRouter = new MessageRouter(messageController);
+app.use('/messages', messageRouter.router);
